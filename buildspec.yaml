@@ -1,32 +1,27 @@
 version: 0.2
-
+ 
 phases:
-  install:
-    runtime-versions:
-      python: 3.9
-    commands:
-      - echo "Installing Docker"
-      - apt-get update && apt-get install -y docker.io
-      
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 166673582388.dkr.ecr.ca-central-1.amazonaws.com
-      - export REPOSITORY_URI=166673582388.dkr.ecr.ca-central-1.amazonaws.com/assignment3-jaisankar
-      
+      - aws --version
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME  # Exporting REPOSITORY_URI to use it in subsequent phases
+  
   build:
     commands:
-      - echo Building Docker image...
-      - docker build -t assignment3-jaisankar .
-      - echo Tagging Docker image...
-      - docker tag assignment3-jaisankar:latest $REPOSITORY_URI:latest
-      
+      - echo Build started on $(date)
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
+  
   post_build:
     commands:
-      - echo Pushing Docker image to Amazon ECR...
-      - docker push $REPOSITORY_URI:latest
-      - echo Writing image definition file...
-      - printf '[{"name":"%s","imageUri":"%s"}]' "$CONTAINER_NAME" "$REPOSITORY_URI:latest" > imagedefinitions.json
-
+      - echo Build completed on $(date)
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+ 
 artifacts:
   files: imagedefinitions.json
