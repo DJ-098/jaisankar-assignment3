@@ -15,10 +15,10 @@ phases:
   build:
     commands:
       - echo Building Docker image...
-      - docker build -t jaisankar-flask-app .
+      - docker build -t jaisankar-assign3 .
       - echo Tagging Docker image...
-      - docker tag jaisankar-flask-app:latest 166673582388.dkr.ecr.us-east-1.amazonaws.com/jaisankar-flask-app:latest
+      - docker tag jaisankar-assign3:latest 166673582388.dkr.ecr.us-east-1.amazonaws.com/jaisankar-assign3:latest
   post_build:
     commands:
       - echo Pushing Docker image to Amazon ECR...
-      - docker push 166673582388.dkr.ecr.us-east-1.amazonaws.com/jaisankar-flask-app:latest
+      - docker push 166673582388.dkr.ecr.us-east-1.amazonaws.com/jaisankar-assign3:latest
