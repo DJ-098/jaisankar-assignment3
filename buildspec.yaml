@@ -12,13 +12,22 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 166673582388.dkr.ecr.ca-central-1.amazonaws.com
+      - REPOSITORY_URI=166673582388.dkr.ecr.ca-central-1.amazonaws.com/assignment3-jaisankar
+      
   build:
     commands:
       - echo Building Docker image...
       - docker build -t assignment3-jaisankar .
       - echo Tagging Docker image...
       - docker tag assignment3-jaisankar:latest 166673582388.dkr.ecr.ca-central-1.amazonaws.com/assignment3-jaisankar:latest
+      
   post_build:
     commands:
       - echo Pushing Docker image to Amazon ECR...
       - docker push 166673582388.dkr.ecr.ca-central-1.amazonaws.com/assignment3-jaisankar:latest
+      - echo Writing image definition file...
+      - printf '[{"name":'%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+
+
+  artifacts:
+      files: imagedefinitions.json
