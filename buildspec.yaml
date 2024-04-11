@@ -3,7 +3,11 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      docker: 18
+      python: 3.9
+    commands:
+      - echo "Installing Docker"
+      - apt-get update && apt-get install -y docker.io
+      
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
