@@ -1,17 +1,12 @@
-# Use the official Python image as a base image
-FROM python:3.9-slim
-
+# Use the official Python image as the base image
+FROM python:3.8-slim
 # Set the working directory in the container
 WORKDIR /app
-
-# Copy the dependencies file to the working directory
-COPY requirements.txt .
-
-# Install dependencies
-RUN pip install -r requirements.txt
-
-# Copy the content of the local src directory to the working directory
-COPY . .
-
-# Command to run on container start
-CMD [ "python", "app.py" ]
+# Copy the Python script into the container at /app
+COPY app.py .
+# Install Flask
+RUN pip install Flask
+# Expose port 80 to the outside world.
+EXPOSE 80
+# Run the Python script when the container launches
+CMD ["python", "app.py"]
