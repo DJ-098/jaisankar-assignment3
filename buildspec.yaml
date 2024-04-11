@@ -1,20 +1,20 @@
-steps:
-  # Step 1: Building the Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'my-flask-app', '.']
+version: 0.2
 
-  # Step 2: Tagging the Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['tag', 'my-flask-app', '166673582388.dkr.ecr.us-east-1.amazonaws.com/my-flask-app']
-
-  # Step 3: Authenticating with AWS ECR
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 166673582388.dkr.ecr.us-east-1.amazonaws.com
-
-  # Step 4: Pushing the Docker image to Amazon ECR
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '166673582388.dkr.ecr.us-east-1.amazonaws.com/my-flask-app']
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 166673582388.dkr.ecr.us-east-1.amazonaws.com
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t jaisankar-flask-app .
+      - echo Tagging Docker image...
+      - docker tag jaisankar-flask-app:latest 166673582388.dkr.ecr.us-east-1.amazonaws.com/jaisankar-flask-app:latest
+  post_build:
+    commands:
+      - echo Pushing Docker image to Amazon ECR...
+      - docker push 166673582388.dkr.ecr.us-east-1.amazonaws.com/jaisankar-flask-app:latest
