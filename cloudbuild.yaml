@@ -1,0 +1,15 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/cloud-sem2/flask-backend', '.']
+    
+  # Push the Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/cloud-sem2/flask-backend']
+
+  # Tag the image with the Artifact Registry repository
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'tag'
+      - 'gcr.io/cloud-sem2/flask-backend'
+      - 'us-central1-docker.pkg.dev/cloud-sem2/jaisankar-assignment2/flask-backend:latest'
