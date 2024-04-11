@@ -22,3 +22,6 @@ phases:
     commands:
       - echo Pushing Docker image to Amazon ECR...
       - docker push 166673582388.dkr.ecr.us-east-1.amazonaws.com/assignment3-jaisankar:latest
+
+  artifacts:
+  files: []
