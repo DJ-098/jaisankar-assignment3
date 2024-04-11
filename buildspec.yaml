@@ -15,10 +15,10 @@ phases:
   build:
     commands:
       - echo Building Docker image...
-      - docker build -t jaisankar-assign3 .
+      - docker build -t assignment3-jaisankar .
       - echo Tagging Docker image...
-      - docker tag jaisankar-assign3:latest 166673582388.dkr.ecr.us-east-1.amazonaws.com/jaisankar-assign3:latest
+      - docker tag assignment3-jaisankar:latest 166673582388.dkr.ecr.us-east-1.amazonaws.com/assignment3-jaisankar:latest
   post_build:
     commands:
       - echo Pushing Docker image to Amazon ECR...
-      - docker push 166673582388.dkr.ecr.us-east-1.amazonaws.com/jaisankar-assign3:latest
+      - docker push 166673582388.dkr.ecr.us-east-1.amazonaws.com/assignment3-jaisankar:latest
