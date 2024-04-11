@@ -1,20 +1,22 @@
-# Use an official Python runtime as a parent image
-FROM python:3.8-slim
-
-# Set the working directory in the container
+# Use official Python image as the base image
+FROM python:3.9-slim
+ 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ 
+# Set working directory in the container
 WORKDIR /app
-
-# Copy the current directory contents into the container at /app
-COPY . .
-
-# Install any needed dependencies specified in requirements.txt
-RUN pip install --no-cache-dir flask
-
-# Make port 8080 available to the world outside this container
-EXPOSE 8080
-
-# Define environment variable
-ENV NAME jaisankar
-
-# Run app.py when the container launches
+ 
+# Copy the requirements file and install dependencies
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+ 
+# Copy the application code into the container
+COPY . /app/
+ 
+# Expose the Flask app port
+EXPOSE 5000
+ 
+# Command to run the application
 CMD ["python", "app.py"]
